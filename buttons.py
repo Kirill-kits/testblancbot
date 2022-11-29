@@ -12,6 +12,6 @@ startMenu = ReplyKeyboardMarkup(resize_keyboard = True)
 startMenu.add(btnstart)
 
 
-inline_markup = InlineKeyboardMarkup(row_width=1)
 sendpass = InlineKeyboardButton("Отправить код повторно", callback_data='user_logpass')
+inline_markup = InlineKeyboardMarkup(row_width=1)
 inline_markup.insert(sendpass)
