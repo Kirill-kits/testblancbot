@@ -28,7 +28,7 @@ async def start(message: types.Message):
             await bot.send_message(message.from_user.id, "Для работы с ботом нужно авторизоваться :)\nУкажите код, который мы отправили вам на электронную почту.\n\nЕсли вышли из системы, забыли или утеряли письмо с паролем, отправим еще раз :)\n\nДля этого нажмите кнопку 'Отправить код повторно' 👇🏻", reply_markup=but.sendpass)    
         else:
             if db.get_passin(message.from_user.id) != "setpassin":
-                await bot.send_message(message.from_user.id, "Тут ты можешь посмотреть свой email или разлогиниться", reply_markup=but.mainMenu)
+                await bot.send_message(message.from_user.id, "Тут ты можешь посмотреть свой email или разлогиниться 👇🏻", reply_markup=but.mainMenu)
 
 
 @dp.message_handler()
@@ -54,7 +54,7 @@ async def bot_message(message: types.Message):
                     await bot.send_message(message.from_user.id, "Для работы с ботом нужно авторизоваться :)\nУкажите код, который мы отправили вам на электронную почту.\n\nЕсли вышли из системы, забыли или утеряли письмо с паролем, отправим еще раз :)\n\nДля этого нажмите кнопку 'Отправить код повторно' 👇🏻", reply_markup=but.sendpass)    
                 else:
                     if db.get_passin(message.from_user.id) != "setpassin":
-                        await bot.send_message(message.from_user.id, "Тут ты можешь посмотреть свой email или разлогиниться", reply_markup=but.mainMenu)
+                        await bot.send_message(message.from_user.id, "Ты можешь посмотреть свой email или разлогиниться", reply_markup=but.mainMenu)
         
         elif message.text == 'Выйти':
             if db.get_email(message.from_user.id) == "blank":
@@ -93,13 +93,13 @@ async def bot_message(message: types.Message):
                 print(send_mail(sendmessage=user_logpass, receiver=db.get_email(message.from_user.id)))
                 await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
         
-        elif db.get_logpass(message.from_user.id) != "aaaaaaa":
+        elif db.get_passin(message.from_user.id) == "setpassin":
             if (len(message.text) > 6):
                 await bot.send_message(message.from_user.id, "Пароль содержит 6 символов, перепроверьте :)")
-            elif db.get_logpass(message.from_user.id) != message.text:
+            elif db.get_logpass(message.from_user.id) != message.text and db.get_passin(message.from_user.id) == "setpassin":
                 await bot.send_message(message.from_user.id, "Пароль не верный, перепроверьте :)")
             else:
-                if db.get_logpass(message.from_user.id) == message.text:
+                if db.get_logpass(message.from_user.id) == message.text and db.get_passin(message.from_user.id) != "setpassin":
                     db.set_passin(message.from_user.id, message.text)
                     await bot.send_message(message.from_user.id, "Регистрация прошла успешно", reply_markup=but.mainMenu)
         else:
