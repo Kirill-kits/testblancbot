@@ -102,10 +102,7 @@ async def bot_message(message: types.Message):
             await bot.send_message(message.from_user.id, "Я пока не могу поддержать разговор :) \nДля вызова меню используй команду /start")
         
         
-        #db.set_compare_pass(message.from_user.id, message.text):
-            #if db.get_logpass(message.from_user.id) == db.get_compare_pass(message.from_user.id):
-               
-
+              
 def send_mail(sendmessage, receiver):
     sender = "blancpbt@gmail.com"
     password = EMAIL_PASSWORD
