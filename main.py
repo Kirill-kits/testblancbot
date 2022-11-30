@@ -115,7 +115,6 @@ def send_mail(sendmessage, receiver):
         msg = MIMEText(sendmessage)
         msg["Subject"] = "Пароль для входа в бота"
         server.sendmail(sender, receiver, msg.as_string())
-        #server.sendmail(sender, sender, f"Subject: Пароль для входа в бота\n{sendmessage}")
         return "message send successfully"
     except Exception as _ex:
         return f"{_ex}\nChek your login or password"
