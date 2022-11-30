@@ -38,11 +38,11 @@ class Database():
         with self.connection:
             return self.cursor.execute("UPDATE users SET passin = ? WHERE user_id = ?", (passin, user_id,))
     
-    def get_compare_pass(self, user_id):
-        result = self.connection.execute(f"SELECT compare_pass FROM users WHERE user_id ='{user_id}'").fetchone()
+    def get_email_saved(self, user_id):
+        result = self.connection.execute(f"SELECT email_saved FROM users WHERE user_id ='{user_id}'").fetchone()
         return result[0]
     
-    def set_compare_pass(self, user_id, compare_pass):
+    def set_email_saved(self, user_id, email_saved):
         with self.connection:
-            return self.cursor.execute("UPDATE users SET compare_pass = ? WHERE user_id = ?", (compare_pass, user_id,))
+            return self.cursor.execute("UPDATE users SET email_saved = ? WHERE user_id = ?", (email_saved, user_id,))
                

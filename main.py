@@ -62,7 +62,7 @@ async def bot_message(message: types.Message):
             elif db.get_passin(message.from_user.id) == "setpassin": #будет реализовываться в случае изменения логики хранения set_email (сохранения после 'Выйти')
                 await bot.send_message(message.from_user.id, "Вы не в системе!\nДля работы с ботом нужно авторизоваться :)\nУкажите код, который мы отправили вам на электронную почту.\nЕсли вышли из системы, забыли или утеряли письмо с паролем, воспользуйтесь кнопкой для повторной отправки👇🏻", reply_markup=but.sendpass)
             else:
-                db.set_logpass(message.from_user.id, "aaaaaa")
+                db.set_logpass(message.from_user.id, "aaaaaaa")
                 db.set_passin(message.from_user.id, "setpassin")
                 db.set_email(message.from_user.id, "blank")
                 await bot.send_message(message.from_user.id, "Ждем вас снова :)", reply_markup=but.startMenu)
@@ -71,9 +71,12 @@ async def bot_message(message: types.Message):
             if db.get_email(message.from_user.id) == "blank":
                 await bot.send_message(message.from_user.id, "Для работы с ботом нужно авторизоваться :)\nУкажите электронную почту с доменом blanc.ru\nВам придет код, отправьте его в чат:")
             else:
-                db.set_logpass(message.from_user.id, random_pass(6))#random.randint(100001,999999))
-                user_logpass = "Ваш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота:"
-                await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
+                if db.get_passin(message.from_user.id) != "setpassin":
+                    await bot.send_message(message.from_user.id, "Вы в системе, отправка кода не требуется :)")
+                else:
+                    db.set_logpass(message.from_user.id, random_pass(6))#or random.randint(100001,999999))
+                    user_logpass = "Ваш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота:"
+                    await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
             
         elif db.get_email(message.from_user.id) == "blank":
             if(len(message.text) > 255):
@@ -84,12 +87,13 @@ async def bot_message(message: types.Message):
                 #await bot.send_message(message.from_user.id, "Электронная почта должна содержать латинские буквы \nНапример: blanc@blanc.ru")
             else:
                 db.set_email(message.from_user.id, message.text)
+                db.set_email_saved(message.from_user.id, message.text)
                 db.set_logpass(message.from_user.id, random_pass(6))#or random.randint(100001,999999))
                 user_logpass = "Ваш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота для входа в меню."
                 print(send_mail(sendmessage=user_logpass, receiver=db.get_email(message.from_user.id)))
                 await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
         
-        elif db.get_logpass(message.from_user.id) != "aaaaaa":
+        elif db.get_logpass(message.from_user.id) != "aaaaaaa":
             if (len(message.text) > 6):
                 await bot.send_message(message.from_user.id, "Пароль содержит 6 символов, перепроверьте :)")
             elif db.get_logpass(message.from_user.id) != message.text:
