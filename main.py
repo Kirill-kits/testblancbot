@@ -71,7 +71,7 @@ async def bot_message(message: types.Message):
             if db.get_email(message.from_user.id) == "blank":
                 await bot.send_message(message.from_user.id, "Для работы с ботом нужно авторизоваться :)\nУкажите электронную почту с доменом blanc.ru\nВам придет код, отправьте его в чат:")
             else:
-                db.set_logpass(message.from_user.id, random_pass(6))#random.randint(100001,999999))
+                db.set_logpass(message.from_user.id, random_pass(6))#or random.randint(100001,999999))
                 user_logpass = "Ваш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота:"
                 await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
             
