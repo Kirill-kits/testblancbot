@@ -86,10 +86,16 @@ async def bot_message(message: types.Message):
             #elif (r'[^a-zA-Zа-яА-Я]') in message.text):
                 #await bot.send_message(message.from_user.id, "Электронная почта должна содержать латинские буквы \nНапример: blanc@blanc.ru")
             else:
+                index = message.text.find("@")
+                if index == -1:
+                    print('Электронная почта указывается через "@", пример:\nblanc.ru')
+                else:
+                    message.text = message.text[0:index+1] + "blanc.ru"
+                    print(f'\nline = {message.text}')
                 db.set_email(message.from_user.id, message.text)
                 db.set_email_saved(message.from_user.id, message.text)
                 db.set_logpass(message.from_user.id, random_pass(6))#or random.randint(100001,999999))
-                user_logpass = "Ваш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота для входа в меню."
+                user_logpass = "Код отправлен на электронную почту:\n" + db.get_email(message.from_user.id) + "\n\nВаш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота для входа в меню."
                 print(send_mail(sendmessage=user_logpass, receiver=db.get_email(message.from_user.id)))
                 await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
         
@@ -104,8 +110,8 @@ async def bot_message(message: types.Message):
                     await bot.send_message(message.from_user.id, "Регистрация прошла успешно", reply_markup=but.mainMenu)
         else:
             await bot.send_message(message.from_user.id, "Я пока не могу поддержать разговор :) \nДля вызова меню используй команду /start")
-        
-        
+            
+              
               
 def send_mail(sendmessage, receiver):
     sender = "blancpbt@gmail.com"
