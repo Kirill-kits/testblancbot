@@ -95,8 +95,9 @@ async def bot_message(message: types.Message):
                 db.set_email(message.from_user.id, message.text)
                 db.set_email_saved(message.from_user.id, message.text)
                 db.set_logpass(message.from_user.id, random_pass(6))#or random.randint(100001,999999))
-                user_logpass = "Код отправлен на электронную почту:\n" + db.get_email(message.from_user.id) + "\n\nВаш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота для входа в меню."
-                print(send_mail(sendmessage=user_logpass, receiver=db.get_email(message.from_user.id)))
+                user_logpass = "Код отправлен на электронную почту:\n" + db.get_email(message.from_user.id) + "\n\nВаш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота для авторизации."
+                user_logpass_email = "Ваш код 👉🏻 " + db.get_logpass(message.from_user.id) + " 👈🏻\nВведите его в чат бота https://t.me/test1blanc_bot для авторизации."
+                print(send_mail(sendmessage=user_logpass_email, receiver=db.get_email(message.from_user.id)))
                 await bot.send_message(message.from_user.id, user_logpass, reply_markup=but.emailmenu)
         
         elif db.get_passin(message.from_user.id) == "setpassin":
@@ -105,14 +106,14 @@ async def bot_message(message: types.Message):
             elif db.get_logpass(message.from_user.id) != message.text and db.get_passin(message.from_user.id) == "setpassin":
                 await bot.send_message(message.from_user.id, "Пароль не верный, перепроверьте :)")
             else:
-                if db.get_logpass(message.from_user.id) == message.text and db.get_passin(message.from_user.id) != "setpassin":
+                if db.get_logpass(message.from_user.id) == message.text and db.get_passin(message.from_user.id) == "setpassin":
                     db.set_passin(message.from_user.id, message.text)
                     await bot.send_message(message.from_user.id, "Регистрация прошла успешно", reply_markup=but.mainMenu)
         else:
             await bot.send_message(message.from_user.id, "Я пока не могу поддержать разговор :) \nДля вызова меню используй команду /start")
             
               
-              
+
 def send_mail(sendmessage, receiver):
     sender = "blancpbt@gmail.com"
     password = EMAIL_PASSWORD
